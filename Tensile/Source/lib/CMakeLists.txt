@@ -80,23 +80,18 @@ if(TENSILE_USE_LLVM)
     message("*******************")
     message("LIB LLVM CMAKE SECTION")
     message("LLVMObjectYAML_LIBRARY ${LLVMObjectYAML_LIBRARY}")
-    find_library(LLVMObjectYAML_LIBRARY NAMES libLLVMObjectYaml)
+    message("LLVM_LIBRARY_DIR ${LLVM_LIBRARY_DIR}")
+    find_library(LLVMObjectYAML_LIBRARY 
+        NAMES LLVMObjectYAML
+        PATHS ${LLVM_LIBRARY_DIR})
     message("LLVMObjectYAML_LIBRARY ${LLVMObjectYAML_LIBRARY}")
-    if(NOT LLVMObjectYAML_LIBRARY)
-        message("LLVMObjectYAML NOT FOUND")
-        target_link_libraries(TensileHost PRIVATE LLVM )
-    else()
+    if(LLVMObjectYAML_LIBRARY)
         message("LLVMObjectYAML FOUND")
         target_link_libraries(TensileHost PRIVATE LLVMObjectYAML )
-    endif()
-    get_cmake_property(_variableNames VARIABLES)
-    #
-    list (SORT _variableNames)
-    foreach (_variableName ${_variableNames})
-        message(STATUS "${_variableName}=${${_variableName}}")
-    endforeach()
-    #
-    
+    else()
+        message("LLVMObjectYAML NOT FOUND")
+        target_link_libraries(TensileHost PRIVATE LLVM )
+    endif()    
     target_include_directories(TensileHost PRIVATE ${LLVM_INCLUDE_DIRS})
 endif()
 
